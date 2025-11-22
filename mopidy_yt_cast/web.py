@@ -96,7 +96,7 @@ class YouTubeAppHandler(tornado.web.RequestHandler):
 
 def get_app_factory(config, core):
     return [
-        (r'/yt_cast/device-desc.xml', DeviceDescriptionHandler, {'config': config}),
-        (r'/yt_cast/apps/YouTube', YouTubeAppHandler, {'core': core}),
-        (r'/yt_cast/apps/YouTube/run', YouTubeAppHandler, {'core': core}), # Instance URL
+        (r'/device-desc.xml', DeviceDescriptionHandler, {'config': config}),
+        (r'/apps/YouTube', YouTubeAppHandler, {'core': core}),
+        (r'/apps/YouTube/run', YouTubeAppHandler, {'core': core}), # Instance URL
     ]
