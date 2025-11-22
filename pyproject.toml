@@ -25,5 +25,8 @@ dependencies = [
 [project.entry-points."mopidy.ext"]
 yt_cast = "mopidy_yt_cast:Extension"
 
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.packages.find]
 where = ["."]
