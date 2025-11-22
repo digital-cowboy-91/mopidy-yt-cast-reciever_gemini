@@ -103,7 +103,9 @@ class YtCastFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def on_start(self):
         logger.info("Starting SSDP responder")
-        self.ssdp_responder = SsdpResponder(self.config)
+        http_port = self.config['http']['port']
+        # Use the same UUID as the LoungeApi for consistency
+        self.ssdp_responder = SsdpResponder(http_port, f"uuid:{self.lounge_api.screen_id}")
         self.ssdp_responder.start()
         
         # Generate and log pairing code
@@ -120,4 +122,5 @@ class YtCastFrontend(pykka.ThreadingActor, core.CoreListener):
             logger.error(f"Error generating pairing code: {e}")
 
     def on_stop(self):
-            self.ssdp.stop()
+        if self.ssdp_responder:
+            self.ssdp_responder.stop()
