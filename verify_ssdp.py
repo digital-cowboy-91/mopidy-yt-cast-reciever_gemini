@@ -24,6 +24,6 @@ try:
         data, addr = sock.recvfrom(1024)
         print(f"Received response from {addr}:")
         print(data.decode('utf-8'))
-        break # Received one, that's enough for now
+        # Keep listening
 except socket.timeout:
     print("Timed out waiting for response.")
