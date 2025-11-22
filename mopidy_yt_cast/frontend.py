@@ -91,20 +91,33 @@ CONFIGID.UPNP.ORG: 1\r
         if self.sock:
             self.sock.close()
 
+from .lounge import LoungeApi
+
 class YtCastFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
         super().__init__()
         self.config = config
         self.core = core
-        self.ssdp = None
-        # TODO: Get UUID from config or generate consistent one
-        self.uuid = 'uuid:550e8400-e29b-41d4-a716-446655440000' 
+        self.ssdp_responder = None
+        self.lounge_api = LoungeApi(config)
 
     def on_start(self):
-        http_port = self.config['http']['port']
-        self.ssdp = SsdpResponder(http_port, self.uuid)
-        self.ssdp.start()
+        logger.info("Starting SSDP responder")
+        self.ssdp_responder = SsdpResponder(self.config)
+        self.ssdp_responder.start()
+        
+        # Generate and log pairing code
+        try:
+            code = self.lounge_api.get_pairing_code()
+            if code:
+                logger.info("="*40)
+                logger.info(f"YouTube TV Pairing Code: {code}")
+                logger.info("Enter this code in YouTube Settings -> Watch on TV -> Link with TV code")
+                logger.info("="*40)
+            else:
+                logger.warning("Failed to generate YouTube TV Pairing Code")
+        except Exception as e:
+            logger.error(f"Error generating pairing code: {e}")
 
     def on_stop(self):
-        if self.ssdp:
             self.ssdp.stop()
