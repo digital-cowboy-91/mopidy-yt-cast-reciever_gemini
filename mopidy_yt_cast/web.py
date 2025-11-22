@@ -10,6 +10,15 @@ class DeviceDescriptionHandler(tornado.web.RequestHandler):
         self.friendly_name = config['yt_cast']['friendly_name']
         self.uuid = 'uuid:550e8400-e29b-41d4-a716-446655440000' # TODO: Generate or persist this
 
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE')
+
+    def options(self):
+        self.set_status(204)
+        self.finish()
+
     def get(self):
         self.set_header('Content-Type', 'application/xml')
         # Minimal UPnP device description for DIAL
@@ -42,6 +51,15 @@ class DeviceDescriptionHandler(tornado.web.RequestHandler):
 class YouTubeAppHandler(tornado.web.RequestHandler):
     def initialize(self, core):
         self.core = core
+
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE')
+
+    def options(self):
+        self.set_status(204)
+        self.finish()
 
     def get(self):
         self.set_header('Content-Type', 'application/xml')
